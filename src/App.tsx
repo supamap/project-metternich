@@ -5,30 +5,10 @@ import DataByDate from "./components/DataByDate.js";
 import DataByCountry from "./components/DataByCountry.js";
 import DataByType from "./components/DataByType.js";
 import { SaveData, HistoryData } from "./types/SaveData.js";
-import { AppBar, Toolbar, Typography, Button, Box, Container, Chip, ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Box, Container, Chip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import nightingaleLogo from './assets/nightingale_logo.png';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#311721',
-    },
-    background: {
-      default: '#f3e2d8',
-    },
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          margin: 0,
-          padding: 0,
-        },
-      },
-    },
-  },
-});
 
 type View = "dashboard" | "by-date" | "by-country" | "by-type";
 
@@ -79,8 +59,6 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
       <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
         <AppBar position="static" color="primary" elevation={0}>
           <StyledToolbar>
@@ -111,10 +89,10 @@ function App() {
                 )}
               </StyledFileUpload>
               <Box>
-                <NavButton onClick={() => setView("dashboard")}>Dashboard</NavButton>
-                <NavButton onClick={() => setView("by-date")}>Data by Date</NavButton>
-                <NavButton onClick={() => setView("by-country")}>Data by Country</NavButton>
-                <NavButton onClick={() => setView("by-type")}>Data by Type</NavButton>
+                <NavButton onClick={() => setView("dashboard")}>DASHBOARD</NavButton>
+                <NavButton onClick={() => setView("by-date")}>BY DATE</NavButton>
+                <NavButton onClick={() => setView("by-country")}>BY COUNTRY</NavButton>
+                <NavButton onClick={() => setView("by-type")}>BY TYPE</NavButton>
               </Box>
             </Box>
           </StyledToolbar>
@@ -131,7 +109,6 @@ function App() {
           </Box>
         </Container>
       </Box>
-    </ThemeProvider>
   );
 }
 
