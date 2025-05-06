@@ -9,27 +9,7 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import { useState } from "react";
-
-const formatLargeNumber = (value: number) => {
-    if (value >= 1000000) {
-        return `${(value / 1000000).toFixed(2)}M`;
-    } else if (value >= 1000) {
-        return `${(value / 1000).toFixed(2)}K`;
-    }
-    return value.toLocaleString();
-};
-
-const formatCurrency = (value: number) => {
-    return `£${formatLargeNumber(value)}`;
-};
-
-type DataKey = 'gdp' | 'pop' | 'gdp_per_capita';
-
-const DATA_KEY_FORMATTERS: Record<DataKey, (value: number) => string> = {
-    gdp: formatCurrency,
-    pop: formatLargeNumber,
-    gdp_per_capita: formatCurrency,
-};
+import { DATA_KEY_FORMATTERS, DataKey } from "../utils/formatters";
 
 type Order = "asc" | "desc";
 
@@ -71,7 +51,7 @@ export default function DataTable({ data, columns, dataType }: DataTableProps) {
   const formatValue = (columnId: string, value: number) => {
     // If dataType is provided, use it for all numeric columns
     if (dataType) {
-      return DATA_KEY_FORMATTERS[dataType](value);
+      return DATA_KEY_FORMATTERS[dataType as DataKey](value);
     }
     // Otherwise, use the column ID to determine formatting
     const formatter = DATA_KEY_FORMATTERS[columnId as DataKey];

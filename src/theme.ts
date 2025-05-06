@@ -23,17 +23,7 @@ const theme = createTheme({
   },
   spacing: 8, // Base spacing unit
   typography: {
-    h4: {
-      fontWeight: 700,
-    },
-    body1: {
-      fontSize: '1rem',
-    },
     fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
-    h1: {
-      fontSize: '3.2rem',
-      lineHeight: 1.1,
-    },
   },
   components: {
     MuiCssBaseline: {
@@ -51,11 +41,24 @@ const theme = createTheme({
         },
       },
     },
-    MuiButton: {
+    MuiAppBar: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
-          fontSize: '1.1rem',
+          elevation: 0,
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          padding: '8px 16px',
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          height: '24px',
         },
       },
     },

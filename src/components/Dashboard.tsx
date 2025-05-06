@@ -17,13 +17,13 @@ export default function Dashboard({ data }: DashboardProps) {
                 acc[country].push({
                     date: record.date,
                     gdp: info.gdp,
-                    population: info.pop,
+                    pop: info.pop,
                     gdp_per_capita: info.gdp_per_capita
                 });
             }
         });
         return acc;
-    }, {} as Record<string, Array<{ date: number; gdp: number; population: number; gdp_per_capita: number }>>);
+    }, {} as Record<string, Array<{ date: number; gdp: number; pop: number; gdp_per_capita: number }>>);
 
     // Sort each country's data by date
     Object.values(countryData).forEach(data => {
@@ -47,7 +47,7 @@ export default function Dashboard({ data }: DashboardProps) {
             />
             <GraphComponent
                 title="Population Over Time"
-                dataKey="population"
+                dataKey="pop"
                 countryData={countryData}
                 countries={countries}
                 icon="👥"
