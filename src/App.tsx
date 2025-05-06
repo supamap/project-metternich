@@ -5,12 +5,66 @@ import DataByDate from "./components/DataByDate.js";
 import DataByCountry from "./components/DataByCountry.js";
 import DataByType from "./components/DataByType.js";
 import { SaveData, HistoryData } from "./types/SaveData.js";
-import { AppBar, Toolbar, Typography, Button, Box, Container, Chip, ThemeProvider, CssBaseline } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Box, Container, Chip, ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import nightingaleLogo from './assets/nightingale_logo.png';
-import './styles/theme.css';
-import { theme } from './styles/theme';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#311721',
+    },
+    background: {
+      default: '#f3e2d8',
+    },
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          margin: 0,
+          padding: 0,
+        },
+      },
+    },
+  },
+});
 
 type View = "dashboard" | "by-date" | "by-country" | "by-type";
+
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  padding: theme.spacing(1, 2),
+}));
+
+const NavButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.primary.contrastText,
+  marginLeft: theme.spacing(2),
+  fontSize: '1.1rem',
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+}));
+
+const StyledFileUpload = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+  '& input[type="file"]': {
+    display: 'none',
+  },
+  '& label': {
+    color: theme.palette.primary.contrastText,
+    cursor: 'pointer',
+    padding: theme.spacing(1, 2),
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.primary.contrastText}`,
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    },
+  },
+}));
 
 function App() {
   const [historyData, setHistoryData] = useState<HistoryData>({ records: [] });
@@ -27,19 +81,26 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box className="app-container">
+      <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
         <AppBar position="static" color="primary" elevation={0}>
-          <Toolbar className="nav-toolbar">
+          <StyledToolbar>
             <Typography 
               variant="h4" 
               component="div" 
-              className="nav-title"
+              sx={{ 
+                fontWeight: 700, 
+                display: 'flex', 
+                alignItems: 'center',
+                fontFamily: '"Crimson Text", serif',
+                color: 'background.default',
+                gap: 1
+              }}
             >
-              <img src={nightingaleLogo} alt="Nightingale Logo" className="nav-logo" />
+              <img src={nightingaleLogo} alt="Nightingale Logo" style={{ height: '80px', width: 'auto' }} />
               Project Nightingale
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box className="file-upload-container">
+              <StyledFileUpload>
                 <FileUpload onDataLoaded={handleDataLoaded} />
                 {historyData.records.length > 0 && (
                   <Chip 
@@ -48,19 +109,19 @@ function App() {
                     size="small"
                   />
                 )}
-              </Box>
+              </StyledFileUpload>
               <Box>
-                <Button className="nav-button" onClick={() => setView("dashboard")}>Dashboard</Button>
-                <Button className="nav-button" onClick={() => setView("by-date")}>Data by Date</Button>
-                <Button className="nav-button" onClick={() => setView("by-country")}>Data by Country</Button>
-                <Button className="nav-button" onClick={() => setView("by-type")}>Data by Type</Button>
+                <NavButton onClick={() => setView("dashboard")}>Dashboard</NavButton>
+                <NavButton onClick={() => setView("by-date")}>Data by Date</NavButton>
+                <NavButton onClick={() => setView("by-country")}>Data by Country</NavButton>
+                <NavButton onClick={() => setView("by-type")}>Data by Type</NavButton>
               </Box>
             </Box>
-          </Toolbar>
+          </StyledToolbar>
         </AppBar>
 
-        <Container maxWidth="xl" className="content-container">
-          <Box>
+        <Container maxWidth="xl" sx={{ mt: 4 }}>
+          <Box sx={{ mt: 4 }}>
             {view === "dashboard" && historyData.records.length > 0 && (
               <Dashboard data={historyData} />
             )}

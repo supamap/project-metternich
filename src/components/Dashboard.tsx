@@ -1,6 +1,5 @@
 import { HistoryData } from "../types/SaveData.js";
 import GraphComponent from "./GraphComponent.js";
-import '../styles/components.css';
 
 interface DashboardProps {
     data: HistoryData;
@@ -38,7 +37,7 @@ export default function Dashboard({ data }: DashboardProps) {
     console.log('Processed country data:', countryData);
 
     return (
-        <div className="dashboard-grid">
+        <div className="mt-6 space-y-8">
             <GraphComponent
                 title="GDP Over Time"
                 dataKey="gdp"

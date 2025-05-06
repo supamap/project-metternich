@@ -9,7 +9,6 @@ import {
 } from "recharts";
 import { Button, ButtonGroup } from "@mui/material";
 import { useState } from "react";
-import '../styles/components.css';
 
 // Color palette for countries
 const COUNTRY_COLORS = [
@@ -61,8 +60,10 @@ interface TooltipProps {
 
 const CustomTooltip = ({ active, payload, label, countryData, dataKey }: TooltipProps) => {
     if (active && payload && payload.length) {
+        // Get the date from the payload
         const date = payload[0].payload.date;
         
+        // Find the data point for each country at this date
         const dataPoints = Object.entries(countryData).map(([country, data]) => {
             const point = data.find(d => d.date === date);
             return {
@@ -72,10 +73,15 @@ const CustomTooltip = ({ active, payload, label, countryData, dataKey }: Tooltip
         }).filter((point): point is { country: string; value: number } => point.value !== null);
 
         return (
-            <div className="custom-tooltip">
-                <p className="tooltip-year">Year: {label}</p>
+            <div style={{ 
+                backgroundColor: 'white', 
+                padding: '10px', 
+                border: '1px solid #ccc',
+                borderRadius: '4px'
+            }}>
+                <p>Year: {label}</p>
                 {dataPoints.map((point, index) => (
-                    <p key={index} className="tooltip-data-point" style={{ color: COUNTRY_COLORS[index % COUNTRY_COLORS.length] }}>
+                    <p key={index} style={{ color: COUNTRY_COLORS[index % COUNTRY_COLORS.length] }}>
                         {point.country}: {dataKey === 'gdp' 
                             ? formatCurrency(point.value)
                             : formatLargeNumber(point.value)}
@@ -94,9 +100,9 @@ export default function GraphComponent({ title, dataKey, countryData, countries,
     console.log('GraphComponent data:', { title, dataKey, countryData, countries });
 
     return (
-        <div className="graph-container">
-            <div className="graph-header">
-                <h2 className="graph-title">{icon} {title}</h2>
+        <div className="flex flex-col items-center">
+            <div className="flex items-center gap-4 mb-4">
+                <h2 className="text-xl font-semibold text-gray-800">{icon} {title}</h2>
                 <ButtonGroup size="small">
                     <Button 
                         variant={!useLogScale ? "contained" : "outlined"}
@@ -112,48 +118,46 @@ export default function GraphComponent({ title, dataKey, countryData, countries,
                     </Button>
                 </ButtonGroup>
             </div>
-            <div className="chart-container">
-                <ResponsiveContainer width="100%" height="100%">
-                    <LineChart margin={{ left: 10, right: 0, top: 0, bottom: 0 }}>
-                        <XAxis
-                            type="number"
-                            dataKey="date"
-                            name="Year"
-                            domain={['auto', 'auto']}
-                        />
-                        <YAxis
-                            type="number"
+            <ResponsiveContainer width="100%" height={300}>
+                <LineChart margin={{ left: 10, right: 0, top: 0, bottom: 0 }}>
+                    <XAxis
+                        type="number"
+                        dataKey="date"
+                        name="Year"
+                        domain={['auto', 'auto']}
+                    />
+                    <YAxis
+                        type="number"
+                        dataKey={dataKey}
+                        name={title}
+                        tickFormatter={dataKey === 'gdp' ? formatCurrency : formatLargeNumber}
+                        scale={useLogScale ? "log" : "linear"}
+                        domain={useLogScale ? ['dataMin', 'dataMax'] : ['auto', 'auto']}
+                        width={80}
+                    />
+                    <Tooltip content={<CustomTooltip countryData={countryData} dataKey={dataKey} />} />
+                    <Legend 
+                        layout="vertical"
+                        align="right"
+                        verticalAlign="middle"
+                    />
+                    {Object.entries(countryData).map(([country, data], index) => (
+                        <Line
+                            key={country}
+                            type="monotone"
+                            data={data}
                             dataKey={dataKey}
-                            name={title}
-                            tickFormatter={dataKey === 'gdp' ? formatCurrency : formatLargeNumber}
-                            scale={useLogScale ? "log" : "linear"}
-                            domain={useLogScale ? ['dataMin', 'dataMax'] : ['auto', 'auto']}
-                            width={80}
+                            stroke={COUNTRY_COLORS[index % COUNTRY_COLORS.length]}
+                            dot={{ fill: COUNTRY_COLORS[index % COUNTRY_COLORS.length] }}
+                            name={country}
+                            animationDuration={300}
+                            animationBegin={0}
+                            connectNulls={true}
+                            isAnimationActive={true}
                         />
-                        <Tooltip content={<CustomTooltip countryData={countryData} dataKey={dataKey} />} />
-                        <Legend 
-                            layout="vertical"
-                            align="right"
-                            verticalAlign="middle"
-                        />
-                        {Object.entries(countryData).map(([country, data], index) => (
-                            <Line
-                                key={country}
-                                type="monotone"
-                                data={data}
-                                dataKey={dataKey}
-                                stroke={COUNTRY_COLORS[index % COUNTRY_COLORS.length]}
-                                dot={{ fill: COUNTRY_COLORS[index % COUNTRY_COLORS.length] }}
-                                name={country}
-                                animationDuration={300}
-                                animationBegin={0}
-                                connectNulls={true}
-                                isAnimationActive={true}
-                            />
-                        ))}
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
+                    ))}
+                </LineChart>
+            </ResponsiveContainer>
         </div>
     );
 } 
