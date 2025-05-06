@@ -1,0 +1,27 @@
+SAVE1239:
+ date:1841.1.1.1
+ countries:
+  USA:
+   gdp:4200000
+   pop:3550000
+  GBR:
+   gdp:1880000
+   pop:2380000
+  FRA:
+   gdp:1680000
+   pop:2650000
+  PRU:
+   gdp:1420000
+   pop:2000000
+  RUS:
+   gdp:2620000
+   pop:4950000
+  AUS:
+   gdp:680000
+   pop:840000
+  CHN:
+   gdp:1000000
+   pop:39000000
+  JPN:
+   gdp:920000
+   pop:2700000 
